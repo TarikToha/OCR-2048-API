@@ -1,12 +1,19 @@
-# Use slim Python base
+# Use Python base image
 FROM python:3.11-slim
 
-# Install Tesseract and system dependencies
+# Install system dependencies (Tesseract, OCR language data, and image libraries)
 RUN apt-get update && apt-get install -y \
     tesseract-ocr \
-    tesseract-ocr-eng \           # install English language data
-    libglib2.0-0 libsm6 libxext6 libxrender-dev \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    tesseract-ocr-eng \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libgl1 \
+    build-essential \
+    poppler-utils \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
@@ -14,11 +21,14 @@ WORKDIR /app
 # Copy project files
 COPY . .
 
-# Install Python packages
-RUN pip install --no-cache-dir -r requirements.txt
+# Install Python dependencies
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Expose port for FastAPI
+# Optional: Set Tesseract language path if needed
+ENV TESSDATA_PREFIX=/usr/share/tesseract-ocr/4.00/tessdata
+
+# Expose port
 EXPOSE 8000
 
-# Run FastAPI app (replace with your actual file and app instance)
+# Start the FastAPI app
 CMD ["uvicorn", "ocr_api:app", "--host", "0.0.0.0", "--port", "8000"]
