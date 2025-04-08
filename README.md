@@ -36,17 +36,32 @@ values.
     [
       2,
       4,
-      8,
-      16
+      4,
+      8
     ],
     [
-      ...
+      32,
+      16,
+      4,
+      2
+    ],
+    [
+      2,
+      64,
+      16,
+      4
+    ],
+    [
+      32,
+      8,
+      4,
+      2
     ]
   ]
 }
 ```
 
-**Error:**
+**Error Example:**
 
 ```json
 {
@@ -57,8 +72,8 @@ values.
 ## Run
 
 ```bash
-  pip install -r requirements.txt
-  uvicorn ocr_api:app --reload
+pip install -r requirements.txt
+uvicorn ocr_api:app --reload
 ```
 
 ## Notes
