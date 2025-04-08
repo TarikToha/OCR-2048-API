@@ -152,3 +152,24 @@ async def ocr_endpoint(image: UploadFile = File(...)):
         return {"board": board_array.tolist()}
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
+
+
+import os
+
+
+@app.get("/debug/tessdata")
+def list_tessdata():
+    tessdata_dir = "/usr/share/tesseract-ocr/4.00/tessdata"
+    try:
+        files = os.listdir(tessdata_dir)
+        return {"files": files}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.get("/debug/env")
+def get_env():
+    return {
+        "tesseract_cmd": pytesseract.pytesseract.tesseract_cmd,
+        "TESSDATA_PREFIX": os.environ.get("TESSDATA_PREFIX")
+    }
