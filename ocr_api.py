@@ -105,7 +105,6 @@ def ocr_tile(tile: Image.Image, val_idx: int, values: list):
         if val in [2 ** i for i in range(1, 12)] + [32, 128, 512]:
             values[val_idx] = val
             return
-
     values[val_idx] = 0
 
 
@@ -159,6 +158,7 @@ import os
 
 @app.get("/debug/tessdata")
 def find_tessdata():
+    """Searches the filesystem for the location of `eng.traineddata` for debugging."""
     for root, dirs, files in os.walk("/"):
         if "eng.traineddata" in files:
             return {"found": os.path.join(root, "eng.traineddata")}
@@ -167,6 +167,7 @@ def find_tessdata():
 
 @app.get("/debug/env")
 def get_env():
+    """Returns environment configuration for Tesseract path and tessdata prefix."""
     return {
         "tesseract_cmd": pytesseract.pytesseract.tesseract_cmd,
         "TESSDATA_PREFIX": os.environ.get("TESSDATA_PREFIX")

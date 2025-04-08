@@ -1,87 +1,72 @@
-# 2048 OCR API
+# 🧩 2048 OCR API
 
-## Overview
+A full-stack app to extract 4×4 tile values from 2048 game screenshots using OpenCV and Tesseract. It includes a
+web-based frontend and a FastAPI backend.
 
-FastAPI backend that detects the 2048 game board from a screenshot, segments it, and uses Tesseract OCR to extract tile
-values.
+---
 
-## Features
+## 🌟 Features
 
-- `/ocr` endpoint accepts screenshot uploads.
-- Detects and crops board area.
-- Splits into 16 tiles (4×4).
-- Preprocesses each tile for OCR.
-- Multithreaded OCR with Tesseract.
-- Returns 4×4 board as JSON.
+- Upload 2048 screenshots via browser
+- Backend detects and crops the board
+- OCR performed using Tesseract
+- Clean 4×4 grid output with logs
 
-## Stack
+---
 
-- Python 3.10+
-- FastAPI, OpenCV, Pillow, pytesseract, NumPy
-- Tesseract OCR
+## 🗂️ Files
 
-## API
-
-### `POST /ocr`
-
-**Input:**
-
-- `image`: screenshot (form-data)
-
-**Output:**
-
-```json
-{
-  "board": [
-    [
-      2,
-      4,
-      4,
-      8
-    ],
-    [
-      32,
-      16,
-      4,
-      2
-    ],
-    [
-      2,
-      64,
-      16,
-      4
-    ],
-    [
-      32,
-      8,
-      4,
-      2
-    ]
-  ]
-}
+```
+.
+├── index.html         # Frontend UI
+├── ocr_api.py         # FastAPI backend
+├── requirements.txt   # Python packages
 ```
 
-**Error Example:**
+---
 
-```json
-{
-  "error": "⚠️ Board not found in the image!"
-}
-```
+## 📸 Example
 
-## Run
+<table>
+  <tr>
+    <td><strong>Input</strong></td>
+    <td><strong>Output</strong></td>
+  </tr>
+  <tr>
+    <td><img src="screencaps/screenshot265.png" width="150"></td>
+    <td valign="top">
+      <pre><code>
+🧩 OCR 2048 Board:
+   2   4   4   8
+  32  16   4   2
+   2  64  16   4
+  32   8   4   2
+      </code></pre>
+    </td>
+  </tr>
+</table>
+
+---
+
+## 🚀 Run Locally
+
+### Backend
 
 ```bash
 pip install -r requirements.txt
 uvicorn ocr_api:app --reload
 ```
 
-## Notes
+### Frontend
 
-- Requires Tesseract installed in system PATH.
-- Accuracy depends on image clarity.
-- Uses digit whitelist and `--psm 10` mode.
+```bash
+python -m http.server
+```
 
-## License
+Then open `index.html` in your browser.
 
-MIT
+---
+
+## 📄 License
+
+MIT © 2024

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>2048 OCR</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 2rem;
+        }
+
+        .container {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
+        .preview img {
+            width: 300px;
+            border: 1px solid #ccc;
+            padding: 4px;
+            background: #f8f8f8;
+        }
+
+        .output pre {
+            font-size: 1.2rem;
+            background: #f0f0f0;
+            padding: 1rem;
+            border-radius: 6px;
+        }
+
+        .log {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: #222;
+            color: #0f0;
+            font-size: 0.9rem;
+            border-radius: 6px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        #runBtn {
+            display: none;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+<h1>🧩 2048 OCR</h1>
+<input type="file" id="imageInput"/>
+<button id="runBtn" onclick="uploadAndOCR()">Run OCR</button>
+
+<div class="container">
+    <div class="preview">
+        <h3>Uploaded Image</h3>
+        <img id="previewImg" src="" alt="Upload a 2048 Screenshot"/>
+    </div>
+    <div class="output">
+        <h3>OCR Output (4×4 board)</h3>
+        <pre id="result">No result yet.</pre>
+    </div>
+</div>
+
+<h3>🛠️ Debug Log</h3>
+<div id="log" class="log"></div>
+
+<script>
+    // Logs messages to the debug log box with a timestamp
+    function logDebug(message) {
+        const logBox = document.getElementById("log");
+        const timestamp = new Date().toLocaleTimeString();
+        logBox.innerHTML += `[${timestamp}] ${message}<br>`;
+        logBox.scrollTop = logBox.scrollHeight;
+    }
+
+    // Preview the uploaded image and show Run button
+    document.getElementById("imageInput").addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const preview = document.getElementById("previewImg");
+            preview.src = URL.createObjectURL(file);
+
+            logDebug(`📅 File selected: ${file.name}`);
+            document.getElementById("runBtn").style.display = "inline-block";
+        }
+    });
+
+    // Upload image and call backend OCR API
+    async function uploadAndOCR() {
+        const fileInput = document.getElementById("imageInput");
+        const file = fileInput.files[0];
+        if (!file) {
+            logDebug("⚠️ No file selected");
+            return alert("Please choose an image.");
+        }
+
+        logDebug(`📤 Uploading: ${file.name}`);
+
+        const formData = new FormData();
+        formData.append("image", file);
+
+        const start = performance.now(); // ⏱️ Start timer
+
+        try {
+            const response = await fetch("https://ocr-2048-api.onrender.com/ocr", {
+                method: "POST",
+                body: formData,
+            });
+
+            logDebug("📱 Sent POST request to /ocr");
+
+            const data = await response.json();
+
+            const resultEl = document.getElementById("result");
+            if (data.error) {
+                resultEl.textContent = "❌ " + data.error;
+                logDebug("❌ Error: " + data.error);
+            } else {
+                const formatted = data.board.map(row =>
+                    row.map(cell => String(cell).padStart(4)).join(" ")
+                ).join("\n");
+
+                resultEl.textContent = formatted;
+                logDebug("✅ OCR complete. Board received.");
+            }
+
+            const end = performance.now(); // ⏱️ End timer
+            const duration = (end - start).toFixed(1);
+            logDebug(`⏱️ Got response in ${duration} ms`);
+
+        } catch (err) {
+            const msg = `⚠️ Request failed: ${err}`;
+            document.getElementById("result").textContent = msg;
+            logDebug(msg);
+        }
+    }
+</script>
+</body>
+</html>
