@@ -105,6 +105,7 @@ def ocr_tile(tile: Image.Image, val_idx: int, values: list):
         if val in [2 ** i for i in range(1, 12)] + [32, 128, 512]:
             values[val_idx] = val
             return
+
     values[val_idx] = 0
 
 
@@ -119,8 +120,13 @@ def ocr_board(tiles: list) -> np.ndarray:
         t = Thread(target=ocr_tile, args=(tile, idx, values))
         t.start()
         threads.append(t)
+
     for t in threads:
         t.join()
+
+    if -1 in values:
+        raise ValueError("OCR Failed!")
+
     return np.array(values).reshape((4, 4))
 
 
