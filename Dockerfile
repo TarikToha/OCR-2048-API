@@ -24,9 +24,6 @@ COPY . .
 # Install Python dependencies
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Optional: Set Tesseract language path if needed
-ENV TESSDATA_PREFIX=/usr/share/tesseract-ocr/4.00/tessdata
-
 # Expose port
 EXPOSE 8000
 

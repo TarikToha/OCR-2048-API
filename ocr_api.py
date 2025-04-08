@@ -158,13 +158,11 @@ import os
 
 
 @app.get("/debug/tessdata")
-def list_tessdata():
-    tessdata_dir = "/usr/share/tesseract-ocr/4.00/tessdata"
-    try:
-        files = os.listdir(tessdata_dir)
-        return {"files": files}
-    except Exception as e:
-        return {"error": str(e)}
+def find_tessdata():
+    for root, dirs, files in os.walk("/"):
+        if "eng.traineddata" in files:
+            return {"found": os.path.join(root, "eng.traineddata")}
+    return {"error": "eng.traineddata not found"}
 
 
 @app.get("/debug/env")
