@@ -1,31 +1,55 @@
-# 🧩 2048 OCR API
+# 2048 OCR API
 
-A full-stack app to extract 4×4 tile values from 2048 game screenshots using OpenCV and Tesseract. It includes a
-web-based frontend and a FastAPI backend.
+![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)
 
----
-
-## 🌟 Features
-
-- Upload 2048 screenshots via browser
-- Backend detects and crops the board
-- OCR performed using Tesseract
-- Clean 4×4 grid output with logs
+A Python-based OCR API for extracting 4×4 tile values from 2048 game screenshots using OpenCV and Tesseract. It includes
+a FastAPI backend and a browser-based HTML frontend.
 
 ---
 
-## 🗂️ Files
+## Requirements
 
-```
-.
-├── index.html         # Frontend UI
-├── ocr_api.py         # FastAPI backend
-├── requirements.txt   # Python packages
+- Python 3.9+
+- A modern web browser (for the frontend)
+- Tesseract OCR installed and available in your system path
+
+Install dependencies:
+
+```sh
+pip install -r requirements.txt
 ```
 
 ---
 
-## 📸 Example
+## Run Server
+
+Start the FastAPI backend:
+
+```sh
+uvicorn ocr_api:app --reload
+```
+
+---
+
+## Launch Frontend
+
+Serve `index.html` with a simple HTTP server:
+
+```sh
+python -m http.server
+```
+
+Then open the page in your browser.
+
+---
+
+## Upload
+
+Upload a screenshot of the 2048 game using the browser interface served by `index.html`.
+
+---
+
+## Example Output
 
 <table>
   <tr>
@@ -48,25 +72,21 @@ web-based frontend and a FastAPI backend.
 
 ---
 
-## 🚀 Run Locally
+## File Structure
 
-### Backend
-
-```bash
-pip install -r requirements.txt
-uvicorn ocr_api:app --reload
 ```
-
-### Frontend
-
-```bash
-python -m http.server
+.
+├── index.html         # Frontend interface
+├── ocr_api.py         # FastAPI backend
+├── requirements.txt   # Python dependencies
 ```
-
-Then open `index.html` in your browser.
 
 ---
 
-## 📄 License
+## Credits
 
-MIT © 2024
+- [FastAPI](https://fastapi.tiangolo.com/) — backend framework
+- [OpenCV-Python](https://pypi.org/project/opencv-python/) — board detection and image processing
+- [pytesseract](https://pypi.org/project/pytesseract/) — Python wrapper for Tesseract OCR
+- [Tesseract OCR](https://github.com/tesseract-ocr/tesseract) — text recognition engine
+- [Python Imaging Library (Pillow)](https://pypi.org/project/Pillow/) — image format handling
